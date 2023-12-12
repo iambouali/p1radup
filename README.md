@@ -47,7 +47,7 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-python paradup.py -i input_urls.txt -o output_urls.txt
+`python paradup.py -i input_urls.txt -o output_urls.txt`
 
 Will generate an output file (output_urls.txt) with the following content:
 
