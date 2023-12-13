@@ -10,6 +10,8 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 - **Output Format:** The processed URLs are saved to an output file, preserving the original URL structure while removing redundant query parameters.
 
+- **Soft Mode:** Introducing a "soft mode" option (-s/--soft-mode flag) allows users to keep duplicate query parameters in different paths and the same hostname. This enable users to preserve duplicates if needed.
+
 ## Usage
 
 ### Prerequisites
@@ -34,7 +36,8 @@ Replace paradup.py with the actual name of the script file, input_file.txt with 
 
 * **-i** or **--input**: Path to the input file containing a list of URLs.
 * **-o** or **--output**: Path to the output file where processed URLs will be saved.
-
+* **-s** or **--soft-mode**: Keep duplicates in different paths and the same hostname.
+  
 ### Example
 
 Suppose you have an input file (input_urls.txt) with the following content:
