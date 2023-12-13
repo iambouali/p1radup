@@ -12,8 +12,8 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 - **Output Format:** The processed URLs are saved to an output file, preserving the original URL structure while removing redundant query parameters.
 
-- **Soft Mode:** Introducing a "soft mode" option (-s/--soft-mode flag) allows users to keep duplicate query parameters in different paths and the same hostname. This enable users to preserve duplicates if needed.
-
+- **Soft Mode:** The "soft mode" option (-s/--soft-mode flag) allows users to keep duplicate query parameters in different paths and the same hostname.
+  
 ## Usage
 
 ### Prerequisites
@@ -26,17 +26,23 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 2. Open a terminal and navigate to the directory containing the script.
 
+3. Make sure you have Python installed on your system. You can install the required dependencies using the following command:
+
+```bash
+pip3 install -r requirements.txt
+```
+
 3. Run the script using the following command:
 
-   ```bash
-   python p1radup.py -i input_file.txt -o output_file.txt
-   ```
+```bash
+python3 p1radup.py -i input_file.txt -o output_file.txt
+```
 
-Replace p1radup.py with the actual name of the script file, input_file.txt with the path to your input file containing URLs, and output_file.txt with the desired output file path.
+Replace input_file.txt with the path to your input file containing URLs, and output_file.txt with the desired output file path.
 
 ### Command-line Arguments
 
-* **-i** or **--input**: Path to the input file containing a list of URLs.
+* **-i** or **--input**: Path to the input file containing a list of URLs (required).
 * **-o** or **--output**: Path to the output file where processed URLs will be saved.
 * **-s** or **--soft-mode**: Keep duplicates in different paths and the same hostname.
   
@@ -52,7 +58,7 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-`python p1radup.py -i input_urls.txt -o output_urls.txt`
+`python3 p1radup.py -i input_urls.txt -o output_urls.txt`
 
 Will generate an output file (output_urls.txt) with the following content:
 
@@ -61,6 +67,7 @@ https://example.com/page?param1=value1&param2=value2
 https://example.com/page?param4=value4
 https://anotherdomain.com/path?param1=value5&param2=value6
 ```
+
 ### License
 
 This script is released under the MIT License, allowing for free and open use, modification, and distribution.
