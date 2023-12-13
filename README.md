@@ -1,4 +1,4 @@
-# URL Parameter Deduplicator (paradup)
+# URL Parameter Deduplicator (p1radup)
 
 ## Overview
 
@@ -27,10 +27,10 @@ This Python script is designed to process a list of URLs from an input file, rem
 3. Run the script using the following command:
 
    ```bash
-   python paradup.py -i input_file.txt -o output_file.txt
+   python p1radup.py -i input_file.txt -o output_file.txt
    ```
 
-Replace paradup.py with the actual name of the script file, input_file.txt with the path to your input file containing URLs, and output_file.txt with the desired output file path.
+Replace p1radup.py with the actual name of the script file, input_file.txt with the path to your input file containing URLs, and output_file.txt with the desired output file path.
 
 ### Command-line Arguments
 
@@ -50,7 +50,7 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-`python paradup.py -i input_urls.txt -o output_urls.txt`
+`python p1radup.py -i input_urls.txt -o output_urls.txt`
 
 Will generate an output file (output_urls.txt) with the following content:
 
