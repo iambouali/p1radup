@@ -1,5 +1,7 @@
 # URL Parameter Deduplicator (p1radup)
 
+<img width="640" alt="SCR-20231213-rvti" src="https://github.com/iambouali/p1radup/assets/74378500/668d64da-46be-4e10-9c7a-271559ae7fa4">
+
 ## Overview
 
 This Python script is designed to process a list of URLs from an input file, remove duplicate query parameters, and save the modified URLs to an output file. The primary goal is to ensure that each unique parameter is included only once for each distinct hostname.
