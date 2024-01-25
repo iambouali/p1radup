@@ -40,7 +40,7 @@ def process_urls(input_file, output_file=None, soft_mode=False):
             result_urls.append(new_url)
 
     if output_file:
-        with open(output_file, 'a') as file:
+        with open(output_file, 'w') as file:
             for url in result_urls:
                 file.write(url + '\n')
     else:
