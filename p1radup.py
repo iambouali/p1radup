@@ -11,7 +11,7 @@ def print_banner():
  | |_) | | | | (_| | (_| | |_| | |_) |
  | .__/|_|_|  \__,_|\__,_|\__,_| .__/
  |_|                           |_|
- made with <3 by @iambouali
+ with <3 by @iambouali
     """
 
     print(colored(banner, 'green'))
@@ -54,13 +54,16 @@ def main():
     parser.add_argument('-i', '--input', help='Input file path')
     parser.add_argument('-o', '--output', help='Output file path')
     parser.add_argument('-s', '--soft-mode', help='Enable soft mode to preserve duplicates in different paths and the same hostname', action='store_true')
-    args = parser.parse_args()
 
-    if args.input:
-        with open(args.input, 'r') as file:
-            process_urls(file, args.output, args.soft_mode)
-    else:
-        process_urls(sys.stdin, args.output, args.soft_mode)
+    # Use stdin automatically if no input file is provided
+    args = parser.parse_args()
+    input_file = sys.stdin if args.input is None else open(args.input, 'r')
+
+    process_urls(input_file, args.output, args.soft_mode)
+
+    # Close the file if it was opened
+    if args.input is not None:
+        input_file.close()
 
 if __name__ == '__main__':
     main()
