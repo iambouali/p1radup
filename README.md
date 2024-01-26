@@ -1,6 +1,10 @@
 # URL Parameter Deduplicator (p1radup)
 
-<img width="640" alt="SCR-20231213-rvti" src="https://github.com/iambouali/p1radup/assets/74378500/668d64da-46be-4e10-9c7a-271559ae7fa4">
+██████   ██ ██████   █████  ██████  ██    ██ ██████
+██   ██ ███ ██   ██ ██   ██ ██   ██ ██    ██ ██   ██
+██████   ██ ██████  ███████ ██   ██ ██    ██ ██████
+██       ██ ██   ██ ██   ██ ██   ██ ██    ██ ██
+██       ██ ██   ██ ██   ██ ██████   ██████  ██
 
 ## Overview
 
