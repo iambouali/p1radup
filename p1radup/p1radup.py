@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 from urllib.parse import urlparse, parse_qs, urlunparse
 from termcolor import colored
@@ -6,12 +8,12 @@ import concurrent.futures
 
 def print_banner():
     banner = """
-        _               _
-  _ __ / |_ __ __ _  __| |_   _ _ __
- | '_ \| | '__/ _` |/ _` | | | | '_ \
- | |_) | | | | (_| | (_| | |_| | |_) |
- | .__/|_|_|  \__,_|\__,_|\__,_| .__/
- |_|                           |_|
+
+██████   ██ ██████   █████  ██████  ██    ██ ██████
+██   ██ ███ ██   ██ ██   ██ ██   ██ ██    ██ ██   ██
+██████   ██ ██████  ███████ ██   ██ ██    ██ ██████
+██       ██ ██   ██ ██   ██ ██   ██ ██    ██ ██
+██       ██ ██   ██ ██   ██ ██████   ██████  ██
 
  with <3 by @iambouali
     """
