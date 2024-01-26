@@ -20,7 +20,7 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 - **Output Format:** The processed URLs are saved to an output file, preserving the original URL structure while removing redundant query parameters.
 
-- **Soft Mode:** The "soft mode" option (-s/--soft-mode flag) allows users to keep duplicate query parameters in different paths and the same hostname.
+- **Soft Mode:** The `-s` flag allows users to keep duplicate query parameters in different paths and the same hostname.
   
 ## Usage
 
