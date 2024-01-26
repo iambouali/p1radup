@@ -20,25 +20,9 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 - Python 3.x installed on your system.
 
-### Running the Script
+### Installation 
 
-1. Clone or download the script to your local machine.
-
-2. Open a terminal and navigate to the directory containing the script.
-
-3. Make sure you have Python installed on your system. You can install the required dependencies using the following command:
-
-```bash
-pip3 install -r requirements.txt
-```
-
-3. Run the script using the following command:
-
-```bash
-python3 p1radup.py -i input_file.txt -o output_file.txt
-```
-
-Replace input_file.txt with the path to your input file containing URLs, and output_file.txt with the desired output file path.
+pip3 install p1radup
 
 ### Command-line Arguments
 
@@ -58,7 +42,12 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-`python3 p1radup.py -i input_urls.txt -o output_urls.txt`
+`p1radup -i input_urls.txt -o output_urls.txt`
+
+or
+
+`cat input_urls.txt | p1radup -o output_urls.txt`
+
 
 Will generate an output file (output_urls.txt) with the following content:
 
