@@ -22,7 +22,7 @@ This Python script is designed to process a list of URLs from an input file, rem
 
 ### Installation 
 
-pip3 install p1radup
+`pip3 install p1radup`
 
 ### Command-line Arguments
 
