@@ -1,4 +1,4 @@
-# URL Parameter Deduplicator (p1radup)
+# URL Parameter Deduplicator 
 
 ```
  ██████   ██ ██████   █████  ██████  ██    ██ ██████
