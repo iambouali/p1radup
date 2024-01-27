@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='p1radup',
-    version='1.0.5',
+    version='0.0.1',
     packages=find_packages(),
     install_requires=[
         'termcolor',
@@ -14,7 +14,7 @@ setup(
     },
     author='Tarek Bouali',
     author_email='contact@tarekbouali.com',
-    description='This script identifies duplicate query parameters within each URL and retains only the first occurrence of each parameter for a given hostname.',
+    description='This tool is designed to process a list of URLs from an input file, remove duplicate query parameters, and save the modified URLs to an output file.',
     url='https://github.com/iambouali/p1radup',
     classifiers=[
         'Programming Language :: Python :: 3',
