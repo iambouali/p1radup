@@ -51,11 +51,11 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-`p1radup -i `urls.txt` -o param_urls.txt`
+`p1radup -i urls.txt -o param_urls.txt`
 
 or
 
-`cat `urls.txt` | p1radup -o param_urls.txt`
+`cat urls.txt | p1radup -o param_urls.txt`
 
 
 Will generate an output file `param_urls.txt` with the following content:
