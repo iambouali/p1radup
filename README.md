@@ -1,4 +1,4 @@
-# URL Parameter Deduplicator 
+# p1radup
 
 ```
  ██████   ██ ██████   █████  ██████  ██    ██ ██████
@@ -40,9 +40,10 @@ This Python script is designed to process a list of URLs from an input file, rem
   
 ### Example
 
-Suppose you have an input file (input_urls.txt) with the following content:
+Suppose you have an input file `urls.txt` with the following content:
 
 ```
+https://example.com/path/
 https://example.com/page?param1=value1&param2=value2
 https://example.com/page?param1=value3&param4=value4
 https://anotherdomain.com/path?param1=value5&param2=value6
@@ -50,14 +51,14 @@ https://anotherdomain.com/path?param1=value5&param2=value6
 
 ### Running the script:
 
-`p1radup -i input_urls.txt -o output_urls.txt`
+`p1radup -i `urls.txt` -o param_urls.txt`
 
 or
 
-`cat input_urls.txt | p1radup -o output_urls.txt`
+`cat `urls.txt` | p1radup -o param_urls.txt`
 
 
-Will generate an output file (output_urls.txt) with the following content:
+Will generate an output file `param_urls.txt` with the following content:
 
 ```
 https://example.com/page?param1=value1&param2=value2
