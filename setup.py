@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'p1radup = p1radup.p1radup',
+            'p1radup = p1radup.p1radup:main',
         ],
     },
     author='Tarek Bouali',
