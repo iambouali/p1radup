@@ -27,7 +27,7 @@ def process_urls(input_file, output_file=None, soft_mode=False):
         parsed_url = urlparse(url)
         hostname = parsed_url.netloc
         path = parsed_url.path
-        query_params = parse_qs(parsed_url.query)
+        query_params = parse_qs(parsed_url.query, keep_blank_values=True)
 
         if soft_mode:
             new_params = {param: value for param, value in query_params.items() if param not in seen_params.get((hostname, path), set())}
