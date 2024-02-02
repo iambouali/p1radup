@@ -24,7 +24,11 @@ def process_urls(input_file, output_file=None, soft_mode=False):
 
     for line in input_file:
         url = line.strip()
-        parsed_url = urlparse(url)
+        try:
+            parsed_url = urlparse(url)
+        except ValueError:
+            print(f"Ignoring invalid URL: {url}")
+        continue
         hostname = parsed_url.netloc
         path = parsed_url.path
         query_params = parse_qs(parsed_url.query, keep_blank_values=True)
