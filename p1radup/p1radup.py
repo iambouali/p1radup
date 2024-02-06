@@ -28,7 +28,7 @@ def process_urls(input_file, output_file=None, soft_mode=False):
             parsed_url = urlparse(url)
         except ValueError:
             print(f"Ignoring invalid URL: {url}")
-        continue
+            continue
         hostname = parsed_url.netloc
         path = parsed_url.path
         query_params = parse_qs(parsed_url.query, keep_blank_values=True)
