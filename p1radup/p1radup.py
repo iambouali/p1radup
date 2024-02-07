@@ -2,6 +2,7 @@
 
 import sys
 import os
+import datetime
 import argparse
 from termcolor import colored
 from urllib.parse import urlparse, parse_qs
@@ -82,7 +83,7 @@ def worker(output_file, soft_mode, chunks_queue, output_file_lock):
             for result in results:
                 print(result)
 
-def process_urls_with_pool(input_file, output_file=None, soft_mode=False, chunk_size=100000, num_workers=4):
+def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_workers):
     chunks_queue = queue.Queue()
     output_file_lock = threading.Lock()
 
@@ -105,6 +106,26 @@ def process_urls_with_pool(input_file, output_file=None, soft_mode=False, chunk_
     # Wait for the reader thread to finish
     reader.join()
 
+def sort_and_save_input_lines(input_source):
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+    if not input_source:
+        output_filename = f"input_{timestamp}.txt"
+        
+        with open(output_filename, 'a', buffering=-1) as file:
+            for line in sys.stdin:
+                file.write(line)          
+    
+    if input_source:
+        input = input_source
+        filename = os.path.splitext(os.path.basename(input_source))[0]
+        output_filename = f"{filename}_sorted_{timestamp}.txt"
+
+        batch_sort(input, output_filename)
+        
+    
+    return output_filename
+
 def main():
     print_banner()
 
@@ -112,24 +133,15 @@ def main():
     parser.add_argument('-i', '--input', help='Input file path')
     parser.add_argument('-o', '--output', help='Output file path')
     parser.add_argument('-s', '--soft-mode', help='Enable soft mode to preserve duplicates in different paths and the same hostname', action='store_true')
+    parser.add_argument('-c', '--chunk-size', type=int, default=50000, help='The size of each chunk of URLs to process at a time')
+    parser.add_argument('-w', '--num-workers', type=int, default=4, help='The number of worker processes (an additional thread is used for reading the input file)')
     
     args = parser.parse_args()
+    
+    sorted_filename = sort_and_save_input_lines(args.input)
+    sorted_file = open(sorted_filename, 'r')
 
-    if args.input is not None: 
-        # Input needs to be sorted! - This is a requirement for the chunking logic   
-        batch_sort(args.input, args.input)
-        input_file = open(args.input, 'r')
-    else:
-        # Use stdin automatically if no input file is provided
-        # Assumes input is sorted! - This is a requirement for the chunking logic
-        input_file = sys.stdin
-
-    process_urls_with_pool(input_file, args.output, args.soft_mode, chunk_size=50000, num_workers=4)
-
-
-    # Close the file if it was opened
-    if args.input is not None:
-        input_file.close()
+    process_urls_with_pool(sorted_file, args.output, args.soft_mode, args.chunk_size, args.num_workers)
 
 if __name__ == '__main__':
     main()
