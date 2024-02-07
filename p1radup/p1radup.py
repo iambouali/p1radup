@@ -116,15 +116,9 @@ def main():
     args = parser.parse_args()
 
     if args.input is not None: 
-        base, extension = os.path.splitext(args.input)
-        input_sorted_file_name = f"{base}_sorted{extension}"
-
-        # If the sorted file does not exist, create it
-        if not os.path.exists(input_sorted_file_name):
-            # Input needs to be sorted! - This is a requirement for the chunking logic   
-            batch_sort(args.input, input_sorted_file_name)
-
-        input_file = open(input_sorted_file_name, 'r')
+        # Input needs to be sorted! - This is a requirement for the chunking logic   
+        batch_sort(args.input, args.input)
+        input_file = open(args.input, 'r')
     else:
         # Use stdin automatically if no input file is provided
         # Assumes input is sorted! - This is a requirement for the chunking logic
