@@ -10,8 +10,8 @@ import queue
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from sort import batch_sort
-from url_parser import URLProcessor
+from p1radup.sort import batch_sort
+from p1radup.url_parser import URLProcessor
 
 def print_banner():
     banner = """
