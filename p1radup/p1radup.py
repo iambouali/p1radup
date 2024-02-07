@@ -124,7 +124,7 @@ def main():
             # Input needs to be sorted! - This is a requirement for the chunking logic   
             batch_sort(args.input, input_sorted_file_name)
 
-        input_file = open(args.input + "_sorted", 'r')
+        input_file = open(input_sorted_file_name, 'r')
     else:
         # Use stdin automatically if no input file is provided
         # Assumes input is sorted! - This is a requirement for the chunking logic
