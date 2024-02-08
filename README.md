@@ -14,14 +14,6 @@
 
 This tool is designed to process a list of URLs from an input file, remove duplicate query parameters, and save the modified URLs to an output file. The primary goal is to ensure that each unique parameter is included only once for each distinct hostname.
 
-## Features
-
-- **Duplicate Query Parameter Removal:** The script identifies duplicate query parameters within each URL and retains only the first occurrence of each parameter for a given hostname.
-
-- **Output Format:** The processed URLs are saved to an output file, preserving the original URL structure while removing redundant query parameters.
-
-- **Soft Mode:** The `-s` flag allows users to keep duplicate query parameters in different paths and the same hostname.
-  
 ## Usage
 
 ### Prerequisites
