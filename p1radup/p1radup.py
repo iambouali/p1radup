@@ -137,6 +137,10 @@ def main():
     parser.add_argument('-w', '--num-workers', type=int, default=4, help='The number of worker processes (an additional thread is used for reading the input file)')
     
     args = parser.parse_args()
+
+    # Delete output file if it already exists
+    If os.path.exists(args.output):
+      Os.remove(args.output)
     
     sorted_filename = sort_and_save_input_lines(args.input)
     sorted_file = open(sorted_filename, 'r')
