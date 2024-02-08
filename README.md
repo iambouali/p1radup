@@ -35,7 +35,7 @@ This tool is designed to process a list of URLs from an input file, remove dupli
    - If not provided, the processed URLs will be printed to the console.
 * **-s** or **--soft-mode**:
    - Keep duplicates in different paths and the same hostname.
-   - This mode is useful for certain analysis or data processing tasks where keeping duplicates may be usefull.
+   - This mode is useful for certain analysis or data processing tasks where keeping duplicates may be useful.
 * **-w** or **--num-workers**:
    - Specifies the number of worker processes to use for processing URLs concurrently.
    - Increasing the number of workers can improve processing speed, especially for large input files.
