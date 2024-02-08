@@ -135,17 +135,21 @@ def main():
     parser.add_argument('-s', '--soft-mode', help='Enable soft mode to preserve duplicates in different paths and the same hostname', action='store_true')
     parser.add_argument('-c', '--chunk-size', type=int, default=50000, help='The size of each chunk of URLs to process at a time')
     parser.add_argument('-w', '--num-workers', type=int, default=4, help='The number of worker processes (an additional thread is used for reading the input file)')
-    
+
     args = parser.parse_args()
 
     # Delete output file if it already exists
-    if os.path.exists(args.output):
+    if args.output is not None and os.path.exists(args.output):
       os.remove(args.output)
-    
+
     sorted_filename = sort_and_save_input_lines(args.input)
     sorted_file = open(sorted_filename, 'r')
 
     process_urls_with_pool(sorted_file, args.output, args.soft_mode, args.chunk_size, args.num_workers)
 
+    # Delete sorted file
+    if os.path.exists(sorted_filename):
+      os.remove(sorted_filename)
+        
 if __name__ == '__main__':
     main()
