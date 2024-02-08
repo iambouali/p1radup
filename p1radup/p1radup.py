@@ -140,7 +140,7 @@ def main():
 
     # Delete output file if it already exists
     If os.path.exists(args.output):
-      Os.remove(args.output)
+      os.remove(args.output)
     
     sorted_filename = sort_and_save_input_lines(args.input)
     sorted_file = open(sorted_filename, 'r')
