@@ -26,9 +26,22 @@ This tool is designed to process a list of URLs from an input file, remove dupli
 
 ### Command-line Arguments
 
-* **-i** or **--input**: Path to the input file containing a list of URLs (required).
-* **-o** or **--output**: Path to the output file where processed URLs will be saved.
-* **-s** or **--soft-mode**: Keep duplicates in different paths and the same hostname.
+* **-i** or **--input**:
+   - Path to the input file containing a list of URLs (required).
+   - Example: `-i input.txt or --input /path/to/input/file.txt`.
+* **-o** or **--output**:
+   - Path to the output file where processed URLs will be saved.
+   - Example: `-o output.txt` or `--output /path/to/output/file.txt`.
+   - If not provided, the processed URLs will be printed to the console.
+* **-s** or **--soft-mode**:
+   - Keep duplicates in different paths and the same hostname.
+   - This mode is useful for certain analysis or data processing tasks where keeping duplicates may be usefull.
+* **-w** or **--num-workers**:
+   - Specifies the number of worker processes to use for processing URLs concurrently.
+   - Increasing the number of workers can improve processing speed, especially for large input files.
+   - However, using too many workers may overload system resources.
+   - The default value is 4 if not specified.
+   - Example: `-w 8` or `--num-workers 8`.
   
 ### Example
 
