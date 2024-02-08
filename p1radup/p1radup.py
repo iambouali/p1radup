@@ -139,7 +139,7 @@ def main():
     args = parser.parse_args()
 
     # Delete output file if it already exists
-    If os.path.exists(args.output):
+    if os.path.exists(args.output):
       os.remove(args.output)
     
     sorted_filename = sort_and_save_input_lines(args.input)
