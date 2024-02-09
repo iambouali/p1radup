@@ -123,7 +123,6 @@ def sort_and_save_input_lines(input_source):
 
         batch_sort(input, output_filename)
 
-
     return output_filename
 
 def main():
