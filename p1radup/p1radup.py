@@ -45,7 +45,7 @@ def process_chunk(chunk, soft_mode):
 def reader_thread(input_file, chunks_queue, chunk_size):
     current_chunk = []
     current_hostname = ''
-    
+
     for line in input_file:
         try:
             url = line.strip()
@@ -76,7 +76,7 @@ def worker(output_file, soft_mode, chunks_queue, output_file_lock):
         results = process_chunk(chunk, soft_mode)
         if output_file:
             with output_file_lock:
-                with open(output_file, 'a') as file:
+                with open(output_file, 'a', encoding='utf-8') as file:
                     for result in results:
                         file.write(result + '\n')
         else:
@@ -94,7 +94,7 @@ def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_w
     # Create a pool of worker threads
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
         futures = [executor.submit(worker, output_file, soft_mode, chunks_queue, output_file_lock) for _ in range(num_workers)]
-        
+
         # Wait for all futures to complete. This loop is not strictly necessary in this setup,
         # but it's useful if you want to handle exceptions or results from workers.
         for future in as_completed(futures):
@@ -110,20 +110,20 @@ def sort_and_save_input_lines(input_source):
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
     if not input_source:
-        output_filename = f"input_{timestamp}.txt"
-        
-        with open(output_filename, 'a', buffering=-1) as file:
+        output_filename = f"/tmp/input_{timestamp}.txt"
+
+        with open(output_filename, 'a', buffering=-1, encoding='utf-8') as file:
             for line in sys.stdin:
-                file.write(line)          
-    
+                file.write(line)
+
     if input_source:
         input = input_source
         filename = os.path.splitext(os.path.basename(input_source))[0]
-        output_filename = f"{filename}_sorted_{timestamp}.txt"
+        output_filename = f"/tmp/{filename}_sorted_{timestamp}.txt"
 
         batch_sort(input, output_filename)
-        
-    
+
+
     return output_filename
 
 def main():
@@ -143,13 +143,13 @@ def main():
       os.remove(args.output)
 
     sorted_filename = sort_and_save_input_lines(args.input)
-    sorted_file = open(sorted_filename, 'r')
+    sorted_file = open(sorted_filename, 'r', encoding='utf-8')
 
     process_urls_with_pool(sorted_file, args.output, args.soft_mode, args.chunk_size, args.num_workers)
 
     # Delete sorted file
     if os.path.exists(sorted_filename):
       os.remove(sorted_filename)
-        
+
 if __name__ == '__main__':
     main()
