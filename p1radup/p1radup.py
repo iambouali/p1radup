@@ -146,9 +146,18 @@ def main():
 
     process_urls_with_pool(sorted_file, args.output, args.soft_mode, args.chunk_size, args.num_workers)
 
-    # Delete sorted file
+    # After processing URLs
+    sorted_file.close()  # Close the file handle
+
+    # Attempt to delete the sorted file
     if os.path.exists(sorted_filename):
-      os.remove(sorted_filename)
+        try:
+            os.remove(sorted_filename)
+            print(f"Sorted file {sorted_filename} deleted successfully.")
+        except Exception as e:
+            print(f"Error deleting sorted file: {e}")
+    else:
+        print(f"Sorted file {sorted_filename} does not exist.")
 
 if __name__ == '__main__':
     main()
