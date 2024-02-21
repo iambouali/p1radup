@@ -4,11 +4,12 @@ import sys
 import os
 import datetime
 import argparse
-from termcolor import colored
-from urllib.parse import urlparse, parse_qs
-import queue
 import threading
+import queue
+import string
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.parse import urlparse, parse_qs
+from termcolor import colored
 
 from p1radup.sort import batch_sort
 from p1radup.url_parser import URLProcessor
@@ -25,6 +26,10 @@ def print_banner():
     """
 
     print(colored(banner, 'green'))
+
+def is_text(s):
+    # Check if a string contains only printable characters.
+    return all(ord(c) < 128 and c in string.printable for c in s)
 
 def process_chunk(chunk, soft_mode):
     url_processor = URLProcessor()
@@ -49,10 +54,15 @@ def reader_thread(input_file, chunks_queue, chunk_size):
     for line in input_file:
         try:
             url = line.strip()
-            parsed_url = urlparse(url)
-            hostname = parsed_url.netloc
+            if is_text(url):
+                parsed_url = urlparse(url)
+                hostname = parsed_url.netloc
+            else:
+                print(f"Ignoring binary data: {url}")
+                continue
         except ValueError:
-            print(f"Ignoring invalid URL: {parsed_url}")
+            print(f"Ignoring invalid URL: {url}")
+            continue
 
         if hostname != current_hostname and len(current_chunk) >= chunk_size:
             chunks_queue.put(current_chunk)
@@ -139,7 +149,7 @@ def main():
 
     # Delete output file if it already exists
     if args.output is not None and os.path.exists(args.output):
-      os.remove(args.output)
+        os.remove(args.output)
 
     sorted_filename = sort_and_save_input_lines(args.input)
     sorted_file = open(sorted_filename, 'r', encoding='utf-8')
