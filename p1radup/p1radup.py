@@ -5,9 +5,10 @@ import os
 import datetime
 import argparse
 import threading
-import queue
+from multiprocessing import Manager
 import string
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import partial
 from urllib.parse import urlparse, parse_qs
 from termcolor import colored
 
@@ -77,7 +78,7 @@ def reader_thread(input_file, chunks_queue, chunk_size):
     # Signal that reading is done by adding None
     chunks_queue.put(None)
 
-def worker(output_file, soft_mode, chunks_queue, output_file_lock):
+def worker(chunks_queue, output_file=None, soft_mode=None, output_file_lock=None):
     while True:
         chunk = chunks_queue.get()
         if chunk is None:  # End signal
@@ -94,16 +95,19 @@ def worker(output_file, soft_mode, chunks_queue, output_file_lock):
                 print(result)
 
 def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_workers):
-    chunks_queue = queue.Queue()
-    output_file_lock = threading.Lock()
+    m = Manager()
+    chunks_queue = m.Queue(num_workers * 2)
+    output_file_lock = m.Lock()
 
     # Start the reader thread
     reader = threading.Thread(target=reader_thread, args=(input_file, chunks_queue, chunk_size))
     reader.start()
 
-    # Create a pool of worker threads
-    with ThreadPoolExecutor(max_workers=num_workers) as executor:
-        futures = [executor.submit(worker, output_file, soft_mode, chunks_queue, output_file_lock) for _ in range(num_workers)]
+    # Create a pool of worker processes
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        # Use partial to create a function with fixed arguments (output_file, soft_mode, output_file_lock)
+        worker_partial = partial(worker, output_file=output_file, soft_mode=soft_mode, output_file_lock=output_file_lock)
+        futures = [executor.submit(worker_partial, chunks_queue) for _ in range(num_workers)]
 
         # Wait for all futures to complete. This loop is not strictly necessary in this setup,
         # but it's useful if you want to handle exceptions or results from workers.
