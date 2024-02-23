@@ -6,7 +6,7 @@ import datetime
 import argparse
 import threading
 from multiprocessing import Manager
-import string
+import unicodedata
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from urllib.parse import urlparse, parse_qs
@@ -29,8 +29,8 @@ def print_banner():
     print(colored(banner, 'green'))
 
 def is_text(s):
-    # Check if a string contains only printable characters.
-    return all(ord(c) < 128 and c in string.printable for c in s)
+    # Check if a string contains only printable characters
+    return all(True for c in s if not unicodedata.category(c).startswith('C'))
 
 def process_chunk(chunk, soft_mode):
     url_processor = URLProcessor()
@@ -87,7 +87,7 @@ def worker(chunks_queue, output_file=None, soft_mode=None, output_file_lock=None
         results = process_chunk(chunk, soft_mode)
         if output_file:
             with output_file_lock:
-                with open(output_file, 'a', encoding='utf-8') as file:
+                with open(output_file, 'a', encoding='utf-8', errors='ignore') as file:
                     for result in results:
                         file.write(result + '\n')
         else:
