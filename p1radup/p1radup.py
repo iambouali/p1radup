@@ -29,7 +29,7 @@ def print_banner():
     print(colored(banner, 'green'))
 
 def is_text(s):
-    # Check if a string contains only printable characters.
+    # Check if a string contains only printable characters
     return all(ord(c) < 128 and c in string.printable for c in s)
 
 def process_chunk(chunk, soft_mode):
@@ -167,7 +167,6 @@ def main():
     if os.path.exists(sorted_filename):
         try:
             os.remove(sorted_filename)
-            print(f"Sorted file {sorted_filename} deleted successfully.")
         except Exception as e:
             print(f"Error deleting sorted file: {e}")
     else:
