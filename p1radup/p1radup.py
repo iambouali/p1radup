@@ -167,7 +167,6 @@ def main():
     if os.path.exists(sorted_filename):
         try:
             os.remove(sorted_filename)
-            print(f"Sorted file {sorted_filename} deleted successfully.")
         except Exception as e:
             print(f"Error deleting sorted file: {e}")
     else:
