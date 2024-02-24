@@ -6,7 +6,6 @@ import datetime
 import argparse
 import threading
 from multiprocessing import Manager
-import unicodedata
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from urllib.parse import urlparse, parse_qs
@@ -14,6 +13,7 @@ from termcolor import colored
 
 from p1radup.sort import batch_sort
 from p1radup.url_parser import URLProcessor
+from p1radup.utils import is_free_of_control_characters
 
 def print_banner():
     banner = """
@@ -55,7 +55,7 @@ def reader_thread(input_file, chunks_queue, chunk_size):
     for line in input_file:
         try:
             url = line.strip()
-            if is_text(url):
+            if is_free_of_control_characters(url):
                 parsed_url = urlparse(url)
                 hostname = parsed_url.netloc
             else:
