@@ -8,12 +8,12 @@ import threading
 from multiprocessing import Manager
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 from termcolor import colored
 
 from p1radup.sort import batch_sort
 from p1radup.url_parser import URLProcessor
-from p1radup.utils import is_free_of_control_characters
+from p1radup.utils import is_url_valid
 
 def print_banner():
     banner = """
@@ -28,19 +28,18 @@ def print_banner():
 
     print(colored(banner, 'green'))
 
-def is_text(s):
-    # Check if a string contains only printable characters
-    return all(True for c in s if not unicodedata.category(c).startswith('C'))
-
 def process_chunk(chunk, soft_mode):
     url_processor = URLProcessor()
     results = []
 
     for parsed_url in chunk:
+        if not is_url_valid(parsed_url.geturl()):
+            continue
         try:
-            query_params = parse_qs(parsed_url.query, keep_blank_values=True)
-            new_url = url_processor.process_url(parsed_url, query_params, soft_mode)
+            new_url = url_processor.process_url(parsed_url, soft_mode)
             if new_url:
+                if not is_url_valid(new_url):
+                    continue
                 results.append(new_url)
 
         except ValueError:
@@ -55,14 +54,10 @@ def reader_thread(input_file, chunks_queue, chunk_size):
     for line in input_file:
         try:
             url = line.strip()
-            if is_free_of_control_characters(url):
-                parsed_url = urlparse(url)
-                hostname = parsed_url.netloc
-            else:
-                print(f"Ignoring binary data: {url}")
-                continue
+            parsed_url = urlparse(url)
+            hostname = parsed_url.netloc
         except ValueError:
-            print(f"Ignoring invalid URL: {url}")
+            print(f"!Ignoring invalid URL: {url}")
             continue
 
         if hostname != current_hostname and len(current_chunk) >= chunk_size:
