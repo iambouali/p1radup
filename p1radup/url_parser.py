@@ -1,5 +1,7 @@
 from urllib.parse import urlunparse, quote_plus, parse_qsl
 
+from p1radup.utils import is_url_valid
+
 class URLProcessor:
     def __init__(self):
         self.seen_params = {}
@@ -30,6 +32,10 @@ class URLProcessor:
         Processes the URL by filtering out seen query parameters and generating a new URL if needed.
         Returns the new URL or None if no new parameters were added.
         """
+        if not is_url_valid(parsed_url.geturl()):
+            print("Invalid URL couldn't be processed: " + parsed_url.geturl())
+            return None
+
         hostname, path, query = parsed_url.netloc, parsed_url.path, parsed_url.query
         key_for_lookup = (hostname, path) if soft_mode else hostname
         seen_set = self.seen_params.get(key_for_lookup, set())
@@ -48,6 +54,11 @@ class URLProcessor:
 
         # Generate and return the new URL if there are new parameters.
         if new_params:
-            return self._generate_new_url(parsed_url, new_params)
-
-        return None
+            new_url = self._generate_new_url(parsed_url, new_params)
+            if not is_url_valid(new_url):
+                print("Invalid URL generated from new params: " + new_url)
+                return None
+            else:
+                return new_url
+        else:
+            return None

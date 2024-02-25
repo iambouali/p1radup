@@ -13,7 +13,6 @@ from termcolor import colored
 
 from p1radup.sort import batch_sort
 from p1radup.url_parser import URLProcessor
-from p1radup.utils import is_url_valid
 
 def print_banner():
     banner = """
@@ -32,18 +31,14 @@ def process_chunk(chunk, soft_mode):
     url_processor = URLProcessor()
     results = []
 
-    for parsed_url in chunk:
-        if not is_url_valid(parsed_url.geturl()):
-            continue
+    for parsed_url in chunk:        
         try:
             new_url = url_processor.process_url(parsed_url, soft_mode)
             if new_url:
-                if not is_url_valid(new_url):
-                    continue
                 results.append(new_url)
 
         except ValueError:
-            print(f"Ignoring invalid URL: {parsed_url}")
+            print(f"Error during URL processing: {parsed_url}")
 
     return results
 
@@ -57,7 +52,7 @@ def reader_thread(input_file, chunks_queue, chunk_size):
             parsed_url = urlparse(url)
             hostname = parsed_url.netloc
         except ValueError:
-            print(f"!Ignoring invalid URL: {url}")
+            print(f"Ignoring invalid URL during read: {url}")
             continue
 
         if hostname != current_hostname and len(current_chunk) >= chunk_size:
