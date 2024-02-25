@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='p1radup',
-    version='2.0.7',
+    version='2.1.7',
     packages=find_packages(),
     install_requires=[
         'termcolor',
+        'validators',
     ],
     entry_points={
         'console_scripts': [
