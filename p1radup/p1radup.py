@@ -37,9 +37,10 @@ def process_chunk(chunk, soft_mode):
             continue
         try:
             new_url = url_processor.process_url(parsed_url, soft_mode)
-            if not is_url_valid(new_url):
-                continue
-            results.append(new_url)
+            if new_url:
+                if not is_url_valid(new_url):
+                    continue
+                results.append(new_url)
 
         except ValueError:
             print(f"Ignoring invalid URL: {parsed_url}")
