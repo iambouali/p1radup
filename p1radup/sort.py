@@ -24,7 +24,7 @@ def merge(key=None, *iterables):
             yield element.obj
 
 
-def batch_sort(input, output, key=None, buffer_size=1024000, tempdirs=None, uniq=False):
+def batch_sort(input, output, key=None, buffer_size=102400000, tempdirs=None, uniq=False):
     if tempdirs is None:
         tempdirs = []
     if not tempdirs:
