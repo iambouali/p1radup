@@ -31,14 +31,13 @@ def process_chunk(chunk, soft_mode):
     url_processor = URLProcessor()
     results = []
 
-    for parsed_url in chunk:        
+    for parsed_url in chunk:
         try:
             new_url = url_processor.process_url(parsed_url, soft_mode)
             if new_url:
                 results.append(new_url)
-
-        except ValueError:
-            print(f"Error during URL processing: {parsed_url}")
+        except Exception as e:
+            print(f"Error processing URL: {parsed_url} - {e}")
 
     return results
 
@@ -69,20 +68,23 @@ def reader_thread(input_file, chunks_queue, chunk_size):
     chunks_queue.put(None)
 
 def worker(chunks_queue, output_file=None, soft_mode=None, output_file_lock=None):
-    while True:
-        chunk = chunks_queue.get()
-        if chunk is None:  # End signal
-            chunks_queue.put(None)  # Propagate the end signal for other workers
-            break
-        results = process_chunk(chunk, soft_mode)
-        if output_file:
-            with output_file_lock:
-                with open(output_file, 'a', encoding='utf-8', errors='ignore') as file:
-                    for result in results:
-                        file.write(result + '\n')
-        else:
-            for result in results:
-                print(result)
+    try:
+        while True:
+            chunk = chunks_queue.get()
+            if chunk is None:  # End signal
+                chunks_queue.put(None)  # Propagate the end signal for other workers
+                break
+            results = process_chunk(chunk, soft_mode)
+            if output_file:
+                with output_file_lock:
+                    with open(output_file, 'a', encoding='utf-8', errors='ignore') as file:
+                        for result in results:
+                            file.write(result + '\n')
+            else:
+                for result in results:
+                    print(result)
+    except Exception as e:
+        print(f"Worker error: {e}")
 
 def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_workers):
     m = Manager()
