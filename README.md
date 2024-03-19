@@ -48,7 +48,6 @@ This tool is designed to process a list of URLs from an input file, remove dupli
    - However, using too many workers may overload system resources.
    - The default value is 4 if not specified.
    - Example: `-w 8` or `--num-workers 8`.
-Let's complete the missing descriptions for the provided command-line arguments:
 * **-gs** or **--gnu-sort**:
   - Enables the use of GNU sort for sorting URLs instead of the program's custom sorting mechanism.
   - GNU sort is a powerful, efficient sorting tool available on Unix-like systems, known for handling large files and complex sorting tasks efficiently.
