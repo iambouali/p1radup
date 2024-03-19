@@ -5,6 +5,7 @@ import os
 import datetime
 import argparse
 import threading
+import subprocess
 from multiprocessing import Manager
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
@@ -120,7 +121,7 @@ def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_w
     # Wait for the reader thread to finish
     reader.join()
 
-def sort_and_save_input_lines(input_source):
+def sort_and_save_input_lines(input_source, use_gnu_sort=False):
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
     if not input_source:
@@ -134,8 +135,12 @@ def sort_and_save_input_lines(input_source):
         input = input_source
         filename = os.path.splitext(os.path.basename(input_source))[0]
         output_filename = f"/tmp/{filename}_sorted_{timestamp}.txt"
-
-        batch_sort(input, output_filename)
+        
+        if use_gnu_sort:
+            with open(output_filename, 'w', encoding='utf-8') as output_file:
+                subprocess.run(['sort', input], stdout=output_file)
+        else:
+            batch_sort(input, output_filename)
 
     return output_filename
 
@@ -148,6 +153,7 @@ def main():
     parser.add_argument('-s', '--soft-mode', help='Enable soft mode to preserve duplicates in different paths and the same hostname', action='store_true')
     parser.add_argument('-c', '--chunk-size', type=int, default=50000, help='The size of each chunk of URLs to process at a time')
     parser.add_argument('-w', '--num-workers', type=int, default=4, help='The number of worker processes (an additional thread is used for reading the input file)')
+    parser.add_argument('-gs', '--gnu-sort', help='Use GNU sort instead of custom sorting', action='store_true')
 
     args = parser.parse_args()
 
@@ -155,7 +161,7 @@ def main():
     if args.output is not None and os.path.exists(args.output):
         os.remove(args.output)
 
-    sorted_filename = sort_and_save_input_lines(args.input)
+    sorted_filename = sort_and_save_input_lines(args.input, args.gnu_sort)
     sorted_file = open(sorted_filename, 'r', encoding='utf-8')
 
     process_urls_with_pool(sorted_file, args.output, args.soft_mode, args.chunk_size, args.num_workers)
