@@ -8,11 +8,11 @@ import threading
 from multiprocessing import Manager
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qsl
 from termcolor import colored
 
 from p1radup.sort import batch_sort
-from p1radup.url_parser import URLProcessor
+from p1radup.url_processor import URLProcessor
 
 def print_banner():
     banner = """
@@ -27,54 +27,62 @@ def print_banner():
 
     print(colored(banner, 'green'))
 
-def process_chunk(chunk, soft_mode):
-    url_processor = URLProcessor()
-    results = []
-
-    for parsed_url in chunk:
-        try:
-            new_url = url_processor.process_url(parsed_url, soft_mode)
-            if new_url:
-                results.append(new_url)
-        except Exception as e:
-            print(f"Error processing URL: {parsed_url} - {e}")
-
+def process_chunk(url_processor):
+    results = url_processor.process_urls()
     return results
 
-def reader_thread(input_file, chunks_queue, chunk_size):
-    current_chunk = []
+def reader_thread(input_file, chunks_queue, chunk_size, soft_mode):
+    url_processor = URLProcessor(soft_mode=soft_mode)
     current_hostname = ''
+
+    current_hostname_processed_params = set()
+    current_hostname_newly_seen_params = set()
 
     for line in input_file:
         try:
             url = line.strip()
             parsed_url = urlparse(url)
-            hostname = parsed_url.netloc
         except ValueError:
             print(f"Ignoring invalid URL during read: {url}")
             continue
+        
+        hostname = parsed_url.netloc
+        if hostname != current_hostname:
+            current_hostname_processed_params = set()
+            current_hostname_newly_seen_params = set()
+            current_hostname = hostname
 
-        if hostname != current_hostname and len(current_chunk) >= chunk_size:
-            chunks_queue.put(current_chunk)
-            current_chunk = []
+        url_processor.add_url(parsed_url)
+            
+        query = parsed_url.query
+        query_params = parse_qsl(query, keep_blank_values=True, strict_parsing=False)
 
-        current_chunk.append(parsed_url)
-        current_hostname = hostname
+        for param, _ in query_params:
+            if param not in current_hostname_processed_params:
+                current_hostname_newly_seen_params.add(param)
 
-    if current_chunk:  # Ensure the last chunk is added
-        chunks_queue.put(current_chunk)
+        if len(url_processor.urls) >= chunk_size:
+            current_hostname_processed_params.update(current_hostname_newly_seen_params)
+            url_processor.processed_params_by_hostname[hostname] = current_hostname_processed_params
+            chunks_queue.put(url_processor)
+
+            current_hostname_newly_seen_params = set()
+            url_processor = URLProcessor(soft_mode=soft_mode)
+
+    if url_processor.urls:  # Ensure the last chunk is added
+        chunks_queue.put(url_processor)
 
     # Signal that reading is done by adding None
     chunks_queue.put(None)
 
-def worker(chunks_queue, output_file=None, soft_mode=None, output_file_lock=None):
+def worker(chunks_queue, output_file=None, output_file_lock=None):
     try:
         while True:
             chunk = chunks_queue.get()
             if chunk is None:  # End signal
                 chunks_queue.put(None)  # Propagate the end signal for other workers
                 break
-            results = process_chunk(chunk, soft_mode)
+            results = process_chunk(chunk)
             if output_file:
                 with output_file_lock:
                     with open(output_file, 'a', encoding='utf-8', errors='ignore') as file:
@@ -92,13 +100,13 @@ def process_urls_with_pool(input_file, output_file, soft_mode, chunk_size, num_w
     output_file_lock = m.Lock()
 
     # Start the reader thread
-    reader = threading.Thread(target=reader_thread, args=(input_file, chunks_queue, chunk_size))
+    reader = threading.Thread(target=reader_thread, args=(input_file, chunks_queue, chunk_size, soft_mode))
     reader.start()
 
     # Create a pool of worker processes
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        # Use partial to create a function with fixed arguments (output_file, soft_mode, output_file_lock)
-        worker_partial = partial(worker, output_file=output_file, soft_mode=soft_mode, output_file_lock=output_file_lock)
+        # Use partial to create a function with fixed arguments (output_file, output_file_lock)
+        worker_partial = partial(worker, output_file=output_file, output_file_lock=output_file_lock)
         futures = [executor.submit(worker_partial, chunks_queue) for _ in range(num_workers)]
 
         # Wait for all futures to complete. This loop is not strictly necessary in this setup,
