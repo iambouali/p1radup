@@ -46,7 +46,7 @@ def reader_thread(input_file, chunks_queue, chunk_size, soft_mode):
             print(f"Ignoring invalid URL during read: {url}")
             continue
         
-        hostname = parsed_url.netloc
+        hostname = (parsed_url.hostname, parsed_url.path) if soft_mode else parsed_url.hostname
         if hostname != current_hostname:
             current_hostname_processed_params = set()
             current_hostname_newly_seen_params = set()
